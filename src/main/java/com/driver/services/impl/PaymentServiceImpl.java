@@ -32,9 +32,9 @@ public class PaymentServiceImpl implements PaymentService {
         {
             throw new Exception("Insufficient Amount");
         }
-       else if ( mode.matches(String.valueOf(PaymentMode.CARD))
-                || mode.matches(String.valueOf(PaymentMode.CASH))
-                || mode.matches(String.valueOf(PaymentMode.UPI)))
+       else if (   ! mode.matches(String.valueOf(PaymentMode.CARD))
+                && ! mode.matches(String.valueOf(PaymentMode.CASH))
+                && ! mode.matches(String.valueOf(PaymentMode.UPI)))
         {
             throw new Exception("Payment mode not detected" );
         }

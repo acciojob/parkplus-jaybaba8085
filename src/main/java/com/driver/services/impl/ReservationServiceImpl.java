@@ -24,5 +24,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public Reservation reserveSpot(Integer userId, Integer parkingLotId, Integer timeInHours, Integer numberOfWheels) throws Exception {
 
+        Reservation reservation=new Reservation();
+        return reservation;
     }
 }

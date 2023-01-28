@@ -38,15 +38,14 @@ public class PaymentServiceImpl implements PaymentService {
         {
             throw new Exception("Payment mode not detected" );
         }
-       else
-       {
+
            payment.setPaymentCompleted(true);
            PaymentMode pm=  getPaymentMode(mode) ;
            payment.setPaymentMode(pm);
-
-           paymentRepository2.save(payment);
+//
+//           paymentRepository2.save(payment);
            return payment;
-       }
+
     }
     private PaymentMode getPaymentMode(String mode) {
         mode = mode.toUpperCase();

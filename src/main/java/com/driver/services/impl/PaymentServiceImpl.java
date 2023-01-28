@@ -1,6 +1,8 @@
 package com.driver.services.impl;
 
+import com.driver.model.Payment;
 import com.driver.model.PaymentMode;
+import com.driver.repository.ParkingLotRepository;
 import com.driver.repository.PaymentRepository;
 import com.driver.repository.ReservationRepository;
 import com.driver.services.PaymentService;
@@ -13,9 +15,14 @@ public class PaymentServiceImpl implements PaymentService {
     ReservationRepository reservationRepository2;
     @Autowired
     PaymentRepository paymentRepository2;
+    @Autowired
+    private ParkingLotRepository parkingLotRepository;
 
     @Override
     public Payment pay(Integer reservationId, int amountSent, String mode) throws Exception {
 
+
+        Payment payment=new Payment();
+        return payment;
     }
 }

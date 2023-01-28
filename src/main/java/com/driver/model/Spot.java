@@ -1,6 +1,7 @@
 package com.driver.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "Spots")
@@ -15,21 +16,24 @@ public class Spot {
 
     private int pricePerHour;
 
-    private boolean isOccupied;
+    private boolean occupied;
 
     @ManyToOne
     @JoinColumn
     private ParkingLot parkingLot;
 
+    @OneToMany(mappedBy = "spot",cascade = CascadeType.ALL)
+    private List<Reservation> reservationList;
+
 
     public Spot() {
     }
 
-    public Spot(int id, SpotType spotType, int pricePerHour, boolean isOccupied) {
+    public Spot(int id, SpotType spotType, int pricePerHour, boolean occupied) {
         this.id = id;
         this.spotType = spotType;
         this.pricePerHour = pricePerHour;
-        this.isOccupied = isOccupied;
+        this.occupied = occupied;
     }
 
     public int getId() {
@@ -57,10 +61,29 @@ public class Spot {
     }
 
     public boolean isOccupied() {
-        return isOccupied;
+        return occupied;
+    }
+    public boolean getOccupied() {
+        return occupied;
     }
 
     public void setOccupied(boolean occupied) {
-        isOccupied = occupied;
+        this.occupied = occupied;
+    }
+
+    public ParkingLot getParkingLot() {
+        return parkingLot;
+    }
+
+    public void setParkingLot(ParkingLot parkingLot) {
+        this.parkingLot = parkingLot;
+    }
+
+    public List<Reservation> getReservationList() {
+        return reservationList;
+    }
+
+    public void setReservationList(List<Reservation> reservationList) {
+        this.reservationList = reservationList;
     }
 }

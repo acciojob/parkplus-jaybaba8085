@@ -19,8 +19,8 @@ public class Payment
     private PaymentMode paymentMode;
 
 
-    @OneToMany(mappedBy = "payment",cascade = CascadeType.ALL)
-    List<Reservation>reservationList;
+    @OneToOne(mappedBy = "payment",cascade = CascadeType.ALL)
+    private Reservation reservation;
 
     public Payment() {
     }
@@ -56,11 +56,19 @@ public class Payment
         this.paymentMode = paymentMode;
     }
 
-    public List<Reservation> getReservationList() {
-        return reservationList;
+    public Reservation getReservation() {
+        return reservation;
     }
 
-    public void setReservationList(List<Reservation> reservationList) {
-        this.reservationList = reservationList;
+    public void setReservation(Reservation reservation) {
+        this.reservation = reservation;
     }
+
+    //    public List<Reservation> getReservationList() {
+//        return reservationList;
+//    }
+//
+//    public void setReservationList(List<Reservation> reservationList) {
+//        this.reservationList = reservationList;
+//    }
 }

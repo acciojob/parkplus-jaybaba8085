@@ -21,7 +21,7 @@ public class Reservation {
     @JoinColumn
     private Spot spot;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn
     private Payment payment;
 

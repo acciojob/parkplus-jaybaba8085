@@ -38,43 +38,44 @@ public class ReservationServiceImpl implements ReservationService {
 
 
         User user=userRepository3.findById(userId).get();
-        List<Reservation>userReservationList= new ArrayList<>();
-        userReservationList =user.getReservationList();
 
         ParkingLot parkingLot=parkingLotRepository3.findById(parkingLotId).get();
+
         List<Spot>spotList=parkingLot.getSpotList();
 
         Spot appropriateSpot =findAppropriateSpot(spotList,numberOfWheels);
-        List<Reservation> reservationList = appropriateSpot.getReservationList();
+        List<Reservation> reservationList;
 
-        int amount=0;
-       if(appropriateSpot!=null)
-       {
-           appropriateSpot.setOccupied(true);
-            amount =timeInHours*appropriateSpot.getPricePerHour();
-           appropriateSpot.setPricePerHour(amount);
-           spotList.add(appropriateSpot);
-           parkingLot.setSpotList(spotList);
-           parkingLotRepository3.save(parkingLot);
-       }
-       else
-       {
-           throw new Exception("Cannot make reservation");
-       }
+        if( appropriateSpot != null)
+        {
+           reservationList = appropriateSpot.getReservationList();
+        }
+        else
+        {
+            throw new Exception("Cannot make reservation");
+        }
 
-         Reservation reservation=new Reservation();
+         int minimumPrice = Integer.MAX_VALUE;
 
-         reservation.setNumberOfHours(amount);
+         if(appropriateSpot.getPricePerHour()*timeInHours<minimumPrice)
+         {
+             minimumPrice = appropriateSpot.getPricePerHour() * timeInHours;
+         }
 
+         appropriateSpot.setOccupied(true);
+
+        Reservation reservation = new Reservation();
+        reservation.setNumberOfHours(timeInHours);
+        reservation.setSpot(appropriateSpot);
+        reservation.setUser(user);
 
          appropriateSpot.getReservationList().add(reservation);
-
-
-         userReservationList.add(reservation);
+         user.getReservationList().add(reservation);
 
 
          userRepository3.save(user);
-         reservationRepository3.save(reservation);
+         spotRepository3.save(appropriateSpot);
+
          return reservation;
     }
 
@@ -84,8 +85,9 @@ public class ReservationServiceImpl implements ReservationService {
         Integer maxPrice = Integer.MAX_VALUE;
 
         Spot newSpot = new Spot();
-        if(numberOfWheels==2) newSpot.setSpotType(SpotType.TWO_WHEELER);
-        else if(numberOfWheels==4) newSpot.setSpotType(SpotType.FOUR_WHEELER);
+
+        if(numberOfWheels>4) newSpot.setSpotType(SpotType.FOUR_WHEELER);
+        else if(numberOfWheels>2) newSpot.setSpotType(SpotType.TWO_WHEELER);
         else  newSpot.setSpotType(SpotType.OTHERS);
 
         for (Spot spot : spotList){
@@ -97,7 +99,23 @@ public class ReservationServiceImpl implements ReservationService {
             }
         }
         for (Spot spot : spotList){
-            if(!spot.isOccupied() &&  numberOfWheels==2 && spot.getSpotType().equals(SpotType.FOUR_WHEELER))
+            if(!spot.isOccupied() &&  numberOfWheels>4 && spot.getSpotType().equals(SpotType.OTHERS))
+            {
+                spotFound=true;
+                newSpot=spot;
+                return  spot;
+            }
+        }
+        for (Spot spot : spotList){
+            if(!spot.isOccupied() &&  numberOfWheels>2 && spot.getSpotType().equals(SpotType.FOUR_WHEELER))
+            {
+                spotFound=true;
+                newSpot=spot;
+                return  spot;
+            }
+        }
+        for (Spot spot : spotList){
+            if(!spot.isOccupied() &&  numberOfWheels<=2 && spot.getSpotType().equals(SpotType.TWO_WHEELER))
             {
                 spotFound=true;
                 newSpot=spot;
